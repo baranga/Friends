@@ -1,0 +1,21 @@
+<phpunit bootstrap="./bootstrap.php" colors="true" >
+    <testsuites>
+        <testsuite name="Friends Test Suite">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./../library/Friends</directory>
+            <exclude>
+                <file>./../library/Friends/DispatchTrait.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log
+            type="coverage-html"
+            target="./../build/reports/tests/coverage"
+        />
+    </logging>
+</phpunit>
