@@ -49,7 +49,7 @@ class Friends_Backtrace
 
     public function offsetSet($offset, $value)
     {
-        throw new RuntimeError('trace is not editable');
+        throw new RuntimeException('trace is not editable');
     }
 
     public function offsetExists($offset)
@@ -59,7 +59,7 @@ class Friends_Backtrace
 
     public function offsetUnset($offset)
     {
-        throw new RuntimeError('trace is not editable');
+        throw new RuntimeException('trace is not editable');
     }
 
     public function offsetGet($offset)

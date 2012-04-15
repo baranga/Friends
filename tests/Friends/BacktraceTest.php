@@ -87,26 +87,68 @@ class Friends_BacktraceTest
 
     public function testToArray()
     {
-        $this->markTestIncomplete();
+        $trace = new Friends_Backtrace();
+        $array = $trace->toArray();
+
+        $this->assertInternalType('array', $array);
+        $this->assertGreaterThan(1, count($array));
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
     public function testOffsetSetIsNotAllowed()
     {
-        $this->markTestIncomplete();
+        $trace = new Friends_Backtrace();
+        $trace->offsetSet(0, 'test');
     }
 
+    /**
+     * @expectedException RuntimeException
+     */
     public function testOffsetUnsetIsNotAllowed()
     {
-        $this->markTestIncomplete();
+        $trace = new Friends_Backtrace();
+        $trace->offsetUnset(0);
     }
 
-    public function testOffsetExists()
+    public function testOffsetExistsWithValidOffset()
     {
-        $this->markTestIncomplete();
+        $trace = new Friends_Backtrace();
+        $validOffset = $trace->offsetExists(0);
+        $this->assertTrue($validOffset);
     }
 
-    public function testOffestGet()
+    public function testOffsetExistsWithInvalidOffset()
     {
-        $this->markTestIncomplete();
+        $trace = new Friends_Backtrace();
+        $invalidOffset = $trace->offsetExists('test');
+        $this->assertFalse($invalidOffset);
+    }
+
+    public function testOffestGetWithValidOffset()
+    {
+        $trace = new Friends_Backtrace();
+        $return = $trace->offsetGet(0);
+
+        $this->assertInstanceOf(
+            'Friends_Friend_Method',
+            $return
+        );
+        $this->assertEquals(
+            __CLASS__,
+            $return->getClass()
+        );
+        $this->assertEquals(
+            __FUNCTION__,
+            $return->getMethod()
+        );
+    }
+
+    public function testOffestGetWithInvalidOffset()
+    {
+        $trace = new Friends_Backtrace();
+        $return = $trace->offsetGet('test');
+        $this->assertNull($return);
     }
 }
