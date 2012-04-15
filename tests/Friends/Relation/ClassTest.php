@@ -56,7 +56,15 @@ class Friends_Relation_ClassTest
      */
     public function testGetFriends()
     {
-        $this->markTestIncomplete();
+        $expectedFriends = $this->_getFriends();
+
+        $relation = new Friends_Relation_Class(self::TEST_CLASS);
+        $friends = $relation->getFriends();
+
+        $this->assertEquals(
+            $expectedFriends,
+            $friends
+        );
     }
 
     /**
@@ -64,11 +72,7 @@ class Friends_Relation_ClassTest
      */
     public function testIsFriendWithFriends()
     {
-        $friends = array(
-            new Friends_Friend_Function('test'),
-            new Friends_Friend_Class('Test'),
-            new Friends_Friend_Method('Test', 'test'),
-        );
+        $friends = $this->_getFriends();
         $relation = new Friends_Relation_Class(self::TEST_CLASS);
 
         foreach ($friends as $friend) {
@@ -77,6 +81,15 @@ class Friends_Relation_ClassTest
                 'relation detects friends'
             );
         }
+    }
+
+    private function _getFriends()
+    {
+        return array(
+            new Friends_Friend_Function('test'),
+            new Friends_Friend_Class('Test'),
+            new Friends_Friend_Method('Test', 'test'),
+        );
     }
 
     /**
