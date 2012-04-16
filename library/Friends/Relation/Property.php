@@ -10,13 +10,13 @@ class Friends_Relation_Property
         $class = (string) $class;
         $property = (string) $property;
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(spritnf(
+            throw new InvalidArgumentException(sprintf(
                 'unknown class: "%s"', $class
             ));
         }
         if (!property_exists($class, $property)) {
-            throw new InvalidArgumentException(spritnf(
-                'unknown function: "%s"', $property
+            throw new InvalidArgumentException(sprintf(
+                'unknown property: "%s"', $property
             ));
         }
 
