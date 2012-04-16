@@ -36,29 +36,29 @@ class Friends_Relation_PropertyTest
     }
 
     /**
-     * @covers Friends_Relation_Method::__construct
+     * @covers Friends_Relation_Property::__construct
      * @expectedException InvalidArgumentException
      */
     public function testConstructThrowsExceptionOnInvalidClass()
     {
-        new Friends_Relation_Method(
+        new Friends_Relation_Property(
             'NotExistingClass', '_test'
         );
     }
 
     /**
-     * @covers Friends_Relation_Method::__construct
+     * @covers Friends_Relation_Property::__construct
      * @expectedException InvalidArgumentException
      */
     public function testConstructThrowsExceptionOnInvalidProperty()
     {
-        new Friends_Relation_Method(
+        new Friends_Relation_Property(
             'stdClass', 'notExistingProperty'
         );
     }
 
     /**
-     * @covers Friends_Relation_Method
+     * @covers Friends_Relation_Property
      * @covers Friends_Relation_AbstractRelation
      */
     public function testGetFriends()
@@ -72,7 +72,7 @@ class Friends_Relation_PropertyTest
     }
 
     /**
-     * @covers Friends_Relation_Method::isFriend
+     * @covers Friends_Relation_Property::isFriend
      */
     public function testIsFriendWithFriends()
     {
@@ -95,7 +95,7 @@ class Friends_Relation_PropertyTest
     }
 
     /**
-     * @covers Friends_Relation_Method::isFriend
+     * @covers Friends_Relation_Property::isFriend
      */
     public function testIsFriendWithStrangers()
     {
