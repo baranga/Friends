@@ -3,6 +3,7 @@
 class Friends_Relation_Property
     extends Friends_Relation_AbstractRelation
 {
+    private $_class;
     private $_property;
 
     public function __construct($class, $property)
@@ -25,7 +26,13 @@ class Friends_Relation_Property
         $friends   = $parser->parse($reflector->getDocComment());
 
         parent::__construct($friends);
+        $this->_class = $class;
         $this->_property = $property;
+    }
+
+    public function getClass()
+    {
+        return $this->_class;
     }
 
     public function getProperty()
