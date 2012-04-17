@@ -10,11 +10,42 @@ class Friends_DispatcherTest_Callee
     protected $_numOfPrivateCalls   = 0;
     protected $_dispatcher;
 
+    public $publicProperty;
+
+    /**
+     * @friend Friends_DispatcherTest_MethodFriendCaller::getProtectedProperty
+     * @friend Friends_DispatcherTest_MethodFriendCaller::setProtectedProperty
+     */
+    protected $_protectedProperty;
+
+    /**
+     * @friend Friends_DispatcherTest_MethodFriendCaller::getPrivateProperty
+     * @friend Friends_DispatcherTest_MethodFriendCaller::setPrivateProperty
+     */
+    private $_privateProperty;
+
     public function __construct(
-        Friends_Dispatcher $dispatcher
+        Friends_Dispatcher $dispatcher,
+        $publicProperty = null,
+        $protectedProperty = null,
+        $privateProperty = null
     )
     {
         $this->_dispatcher = $dispatcher;
+
+        $this->publicProperty = $publicProperty;
+        $this->_protectedProperty = $protectedProperty;
+        $this->_privateProperty = $privateProperty;
+    }
+
+    public function __get($property)
+    {
+        return $this->_dispatcher->dispatchGet($this, $property);
+    }
+
+    public function __set($property, $value)
+    {
+        return $this->_dispatcher->dispatchSet($this, $property, $value);
     }
 
     public function __call($method, $arguments)
@@ -56,5 +87,20 @@ class Friends_DispatcherTest_Callee
     public function getNumOfPrivateCalls()
     {
         return $this->_numOfPrivateCalls;
+    }
+
+    public function getPublicProperty()
+    {
+        return $this->publicProperty;
+    }
+
+    public function getProtectedProperty()
+    {
+        return $this->_protectedProperty;
+    }
+
+    public function getPrivateProperty()
+    {
+        return $this->_privateProperty;
     }
 }
