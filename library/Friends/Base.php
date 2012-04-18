@@ -27,7 +27,7 @@ abstract class Friends_Base
      *  @param mixed $objectOrClass
      *  @return Friends_Dispatcher
      */
-    private static function _getDispatcher($objectOrClass)
+    protected static function _getDispatcher($objectOrClass)
     {
         if (is_object($objectOrClass)) {
             $class = get_class($objectOrClass);
