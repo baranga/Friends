@@ -12,16 +12,19 @@ class Friends_Dispatcher
     public function __construct($class, $lockPrivate = true)
     {
         // @codeCoverageIgnoreStart
+        if (!method_exists('ReflectionProperty', 'setAccessible')) {
+            throw Friends_Dispatcher_MissingLanguageFeatureException
+                ::missingSetMethodAccessible();
+        }
         if (!method_exists('ReflectionMethod', 'setAccessible')) {
-            throw new RuntimeException('ReflectionMethod::setAccessible not found');
+            throw Friends_Dispatcher_MissingLanguageFeatureException
+                ::missingSetMethodAccessible();
         }
         // @codeCoverageIgnoreEnd
 
         $class = (string) $class;
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf(
-                'valid class name required, got: "%s"', $class
-            ));
+            throw new Friends_Dispatcher_UnknownClassException($class);
         }
 
         $this->_class       = $class;
@@ -41,22 +44,20 @@ class Friends_Dispatcher
 
         // check for private
         if ($this->_lockPrivate && $propertyReflector->isPrivate()) {
-            throw new RuntimeException(sprintf(
-                'getting of "%s::%s" is not allowed (private)',
-                $this->_class,
-                $property
-            ));
+            throw new Friends_Dispatcher_GetPropertyNotAllowedException(
+                $this->_class, $property,
+                Friends_Dispatcher_GetPropertyNotAllowedException::CODE_PRIVATE_IS_LOCKED
+            );
         }
 
         // check for friendship
         // go back: dispatch*, __* magic method, calling method
         $caller = $this->_getCaller(2);
         if (!$this->_isPropertyFriend($property, $caller)) {
-            throw new RuntimeException(sprintf(
-                'getting of "%s::%s" is not allowed',
-                $this->_class,
-                $property
-            ));
+            throw new Friends_Dispatcher_GetPropertyNotAllowedException(
+                $this->_class, $property,
+                Friends_Dispatcher_GetPropertyNotAllowedException::CODE_NOT_A_FRIEND
+            );
         }
 
         $propertyReflector->setAccessible(true);
@@ -76,22 +77,20 @@ class Friends_Dispatcher
 
         // check for private
         if ($this->_lockPrivate && $propertyReflector->isPrivate()) {
-            throw new RuntimeException(sprintf(
-                'setting of "%s::%s" is not allowed (private)',
-                $this->_class,
-                $property
-            ));
+            throw new Friends_Dispatcher_SetPropertyNotAllowedException(
+                $this->_class, $property,
+                Friends_Dispatcher_SetPropertyNotAllowedException::CODE_PRIVATE_IS_LOCKED
+            );
         }
 
         // check for friendship
         // go back: dispatch*, __* magic method, calling method
         $caller = $this->_getCaller(2);
         if (!$this->_isPropertyFriend($property, $caller)) {
-            throw new RuntimeException(sprintf(
-                'setting of "%s::%s" is not allowed',
-                $this->_class,
-                $property
-            ));
+            throw new Friends_Dispatcher_SetPropertyNotAllowedException(
+                $this->_class, $property,
+                Friends_Dispatcher_SetPropertyNotAllowedException::CODE_NOT_A_FRIEND
+            );
         }
 
         $propertyReflector->setAccessible(true);
@@ -111,22 +110,20 @@ class Friends_Dispatcher
 
         // check for private
         if ($this->_lockPrivate && $methodReflector->isPrivate()) {
-            throw new RuntimeException(sprintf(
-                'calling of "%s::%s" is not allowed (private)',
-                $this->_class,
-                $method
-            ));
+            throw new Friends_Dispatcher_CallMethodNotAllowedException(
+                $this->_class, $method,
+                Friends_Dispatcher_CallMethodNotAllowedException::CODE_PRIVATE_IS_LOCKED
+            );
         }
 
         // check for friendship
         // go back: dispatch*, __* magic method, called method, calling method
         $caller = $this->_getCaller(3);
         if (!$this->_isMethodFriend($method, $caller)) {
-            throw new RuntimeException(sprintf(
-                'calling of "%s::%s" is not allowed',
-                $this->_class,
-                $method
-            ));
+            throw new Friends_Dispatcher_CallMethodNotAllowedException(
+                $this->_class, $method,
+                Friends_Dispatcher_CallMethodNotAllowedException::CODE_NOT_A_FRIEND
+            );
         }
 
         $methodReflector->setAccessible(true);
@@ -138,8 +135,8 @@ class Friends_Dispatcher
         if (!is_object($object) ||
             !$object instanceof $this->_class
         ) {
-            throw new InvalidArgumentException(
-                'invalid object provided'
+            throw new Friends_Dispatcher_InvalidObjectException(
+                $object, $this->_class
             );
         }
     }
@@ -149,7 +146,7 @@ class Friends_Dispatcher
     )
     {
         if (!$objectReflector->hasProperty($property)) {
-            throw new RuntimeException(sprintf('unknown property: "%s"', $property));
+            throw new Friends_Dispatcher_InvalidPropertyException($property);
         }
     }
 
@@ -158,7 +155,7 @@ class Friends_Dispatcher
     )
     {
         if (!$objectReflector->hasMethod($method)) {
-            throw new RuntimeException(sprintf('unknown method: "%s"', $method));
+            throw new Friends_Dispatcher_InvalidMethodException($method);
         }
     }
 
@@ -234,5 +231,4 @@ class Friends_Dispatcher
             $this->_getClassRelation()->isFriend($caller) ||
             $this->_getMethodRelation($method)->isFriend($caller);
     }
-
 }

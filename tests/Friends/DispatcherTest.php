@@ -35,7 +35,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Dispatcher_UnknownClassException
      */
     public function testConstructorTriggersExceptionOnInvalidClass()
     {
@@ -48,7 +48,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Dispatcher_InvalidObjectException
      */
     public function testDispatchGetChecksTargetIsOfRightType()
     {
@@ -60,7 +60,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_InvalidPropertyException
      */
     public function testDispatchGetChecksThatPropertyExists()
     {
@@ -102,7 +102,8 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testGetOfPrivatePropertyTriggersExceptionIfNotAllowed()
     {
@@ -112,7 +113,8 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testGetOfPrivatePropertyFromStrangerTriggersException()
     {
@@ -122,7 +124,8 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
+     * @expectedExceptionCode 2
      */
     public function testGetOfProtectedPropertyFromStrangerTriggersException()
     {
@@ -136,7 +139,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Dispatcher_InvalidObjectException
      */
     public function testDispatchSetChecksTargetIsOfRightType()
     {
@@ -148,7 +151,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_InvalidPropertyException
      */
     public function testDispatchSetChecksThatPropertyExists()
     {
@@ -188,7 +191,8 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testSetOfPrivatePropertyTriggersExceptionIfNotAllowed()
     {
@@ -199,24 +203,26 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testSetOfPrivatePropertyFromStrangerTriggersException()
     {
         $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
 
-        $caller->setProtectedProperty(__METHOD__);
+        $caller->setPrivateProperty(__METHOD__);
     }
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
+     * @expectedExceptionCode 2
      */
     public function testSetOfProtectedPropertyFromStrangerTriggersException()
     {
         $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
 
-        $caller->setPrivateProperty(__METHOD__);
+        $caller->setProtectedProperty(__METHOD__);
     }
 
     // -------------------------------------------------------------------------
@@ -225,7 +231,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Dispatcher_InvalidObjectException
      */
     public function testDispatchChecksCallTargetIsOfRightType()
     {
@@ -237,7 +243,7 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_InvalidMethodException
      */
     public function testDispatchChecksThatMethodExists()
     {
@@ -317,20 +323,10 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testCallToPrivateFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-
-        $caller->triggerProtectedCall();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
-     */
-    public function testCallToProtectedFromStrangerTriggersException()
     {
         $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
 
@@ -339,7 +335,20 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException RuntimeException
+     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
+     * @expectedExceptionCode 2
+     */
+    public function testCallToProtectedFromStrangerTriggersException()
+    {
+        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
+
+        $caller->triggerProtectedCall();
+    }
+
+    /**
+     * @covers Friends_Dispatcher
+     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
+     * @expectedExceptionCode 1
      */
     public function testCallToPrivateTriggersExceptionIfNotAllowed()
     {
