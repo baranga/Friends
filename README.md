@@ -14,6 +14,8 @@ for PHP. This is done with the built-in
 Just inherit from `Friends_Base` or implement same magic hooks in your class.
 
 ```php
+<?php
+
 class MyClass
     extends Friends_Base
 {
@@ -22,6 +24,8 @@ class MyClass
 ```
 
 ```php
+<?php
+
 class MyClass
 {
     public function __call($method, $arguments)
@@ -36,6 +40,8 @@ class MyClass
 As in 5.3 or use the trait `Friends_DispatchingTrait`.
 
 ```php
+<?php
+
 class MyClass
     use Friends_DispatchingTrait
 {
