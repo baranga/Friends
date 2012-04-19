@@ -39,3 +39,8 @@ class MyClass
     // ...
 }
 ```
+
+## Todo
+* replace all SPL exceptions with lib exception
+* increase code coverage of unit tests
+* implement the trait
