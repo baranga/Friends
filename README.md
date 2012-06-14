@@ -22,7 +22,7 @@ class MyClass
     {
         $trace = new Friends_Backtrace();
         $caller = $trace[2];
-        $controller = new Friends_AccessController(__CLASS__);
+        $controller = new Friends_AccessController($this);
         $controller->assertCallIsAllowed($method, $caller);
         return call_user_func_array(
             array($this, $method),
@@ -53,7 +53,7 @@ class MyClass
 {
     public function __call($method, $arguments)
     {
-        $controller = new Friends_AccessController(__CLASS__);
+        $controller = new Friends_AccessController($this);
         $dispatcher = new Friends_Dispatcher($controller);
         return $dispatcher->dispatchCall($this, $method, $arguments);
     }
