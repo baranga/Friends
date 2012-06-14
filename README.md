@@ -53,7 +53,8 @@ class MyClass
 {
     public function __call($method, $arguments)
     {
-        $dispatcher = new Friends_Dispatcher($this);
+        $controller = new Friends_AccessController(__CLASS__);
+        $dispatcher = new Friends_Dispatcher($controller);
         return $dispatcher->dispatchCall($this, $method, $arguments);
     }
 }
