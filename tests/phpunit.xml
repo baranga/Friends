@@ -8,7 +8,7 @@
         <whitelist>
             <directory suffix=".php">./../library/Friends</directory>
             <exclude>
-                <file>./../library/Friends/DispatchTrait.php</file>
+                <file>./../library/Friends/DispatchingTrait.php</file>
             </exclude>
         </whitelist>
     </filter>
