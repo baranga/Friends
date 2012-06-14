@@ -35,6 +35,10 @@ class Friends_AccessController
 
     public function __construct($class, $lockPrivate = true)
     {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
         $class = (string) $class;
         if (!class_exists($class)) {
             throw new Friends_AccessController_UnknownClassException($class);
