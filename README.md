@@ -5,13 +5,36 @@ for PHP. This is done with the built-in
 [Reflection](http://php.net/manual/en/book.reflection.php) feature of PHP.
 
 ## Requirements
-* version: 5.3.2+
-* compiled with reflection
+* version: >= 5.2
+* for auto dispatching: >= 5.3.2 compiled with reflection
 
 ## Usage
 
-### PHP 5.3
-Just inherit from `Friends_Base` or implement same magic hooks in your class.
+### PHP 5.2
+Implement magic hooks with access controll and dispatch magic.
+
+```php
+<?php
+
+class MyClass
+{
+    public function __call($method, $arguments)
+    {
+        $trace = new Friends_Backtrace();
+        $caller = $trace[2];
+        $controller = new Friends_AccessController(__CLASS__);
+        $controller->assertCallIsAllowed($method, $caller);
+        return call_user_func_array(
+            array($this, $method),
+            $arguments
+        );
+    }
+}
+```
+
+### PHP 5.3 (>= 5.3.2)
+As in 5.2 or just inherit from `Friends_Base` or implement same magic hooks in
+your class.
 
 ```php
 <?php
