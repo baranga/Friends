@@ -1,6 +1,6 @@
 <?php
 
-class Friends_Dispatcher_InvalidPropertyException
+class Friends_AccessController_InvalidPropertyException
     extends RuntimeException
 {
     public function __construct($property)

@@ -1,6 +1,6 @@
 <?php
 
-class Friends_Dispatcher_InvalidMethodException
+class Friends_AccessController_InvalidMethodException
     extends RuntimeException
 {
     public function __construct($method)

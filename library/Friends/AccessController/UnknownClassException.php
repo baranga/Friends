@@ -1,6 +1,6 @@
 <?php
 
-class Friends_Dispatcher_UnknownClassException
+class Friends_AccessController_UnknownClassException
     extends InvalidArgumentException
 {
     public function __construct($class)

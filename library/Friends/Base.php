@@ -35,7 +35,9 @@ abstract class Friends_Base
             $class = (string) $objectOrClass;
         }
         if (!isset(self::$_dispatchers[$class])) {
-            self::$_dispatchers[$class] = new Friends_Dispatcher($class);
+            $accessController = new Friends_AccessController($class);
+            $dispatcher = new Friends_Dispatcher($accessController);
+            self::$_dispatchers[$class] = $dispatcher;
         }
         return self::$_dispatchers[$class];
     }
