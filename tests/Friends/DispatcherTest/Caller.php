@@ -1,8 +1,16 @@
 <?php
 
-class Friends_DispatcherTest_ClassFriendCaller
-    extends Friends_DispatcherTest_AbstractCaller
+class Friends_DispatcherTest_Caller
 {
+    protected $_callee;
+
+    public function __construct(
+        Friends_DispatcherTest_Callee $callee
+    )
+    {
+        $this->_callee = $callee;
+    }
+
     public function triggerPublicCall()
     {
         $this->_callee->receivePublicCall();

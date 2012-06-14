@@ -1,7 +1,7 @@
 <?php
 
-class Friends_DispatcherTest_MethodFriendCaller
-    extends Friends_DispatcherTest_AbstractCaller
+class Friends_AccessControllerTest_MethodFriendCaller
+    extends Friends_AccessControllerTest_AbstractCaller
 {
     public function triggerPublicCall()
     {
@@ -17,7 +17,7 @@ class Friends_DispatcherTest_MethodFriendCaller
     {
         $this->_callee->_receivePrivateCall();
     }
-    
+
     public function getPublicProperty()
     {
         return $this->_callee->publicProperty;

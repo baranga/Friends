@@ -3,23 +3,41 @@
 class Friends_DispatcherTest
     extends PHPUnit_Framework_TestCase
 {
-    private $_dispatcher;
-    private $_callee;
-
     const PROPERTYVALUE_PUBLIC    = 'public property test value';
     const PROPERTYVALUE_PROTECTED = 'protected property test value';
     const PROPERTYVALUE_PRIVATE   = 'private property test value';
 
+    private $_accessController;
+    private $_dispatcher;
+    private $_callee;
+    private $_caller;
+
     public function setUp()
     {
-        $this->_dispatcher = $this->_buildDispatcher(true);
+        if (version_compare(PHP_VERSION, '5.3.2', '<')) {
+            $this->markTestSkipped('PHP version < 5.3.2');
+            return;
+        }
+        $this->_accessController = $this->_buildAccessController(
+            'Friends_DispatcherTest_Callee'
+        );
+        $this->_dispatcher = $this->_buildDispatcher($this->_accessController);
         $this->_callee = $this->_buildCallee($this->_dispatcher);
+        $this->_caller = $this->_buildCaller($this->_callee);
     }
 
-    private function _buildDispatcher($privateLocked = true)
+    private function _buildAccessController($class)
+    {
+        $controller = new Friends_DispatcherTest_AccessController(
+            $class, false
+        );
+        return $controller;
+    }
+
+    private function _buildDispatcher($accessController)
     {
         return new Friends_Dispatcher(
-            'Friends_DispatcherTest_Callee', $privateLocked
+            $accessController
         );
     }
 
@@ -33,13 +51,9 @@ class Friends_DispatcherTest
         );
     }
 
-    /**
-     * @covers Friends_Dispatcher::__construct
-     * @expectedException Friends_Dispatcher_UnknownClassException
-     */
-    public function testConstructorTriggersExceptionOnInvalidClass()
+    private function _buildCaller(Friends_DispatcherTest_Callee $callee)
     {
-        new Friends_Dispatcher('NonExistingClass');
+        return new Friends_DispatcherTest_Caller($callee);
     }
 
     // -------------------------------------------------------------------------
@@ -53,30 +67,18 @@ class Friends_DispatcherTest
     public function testDispatchGetChecksTargetIsOfRightType()
     {
         $object = new ArrayObject();
-        $dispatcher = new Friends_Dispatcher('Friends_DispatcherTest_Callee');
 
-        $dispatcher->dispatchGet($object, 'property');
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_InvalidPropertyException
-     */
-    public function testDispatchGetChecksThatPropertyExists()
-    {
-        $object = new stdClass;
-        $dispatcher = new Friends_Dispatcher('stdClass');
-
-        $dispatcher->dispatchGet($object, 'property');
+        $this->_dispatcher->dispatchGet($object, 'property');
     }
 
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodGetProtectedCalleeProperty()
+    public function testGetProtectedProperty()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
-        $value = $caller->getProtectedProperty();
+        $this->_accessController->setAllowed(true);
+
+        $value = $this->_caller->getProtectedProperty();
 
         $this->assertEquals(
             self::PROPERTYVALUE_PROTECTED,
@@ -87,13 +89,11 @@ class Friends_DispatcherTest
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodGetPrivateCalleeProperty()
+    public function testGetPrivateProperty()
     {
-        $dispatcher = $this->_buildDispatcher(false);
-        $callee = $this->_buildCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($callee);
+        $this->_accessController->setAllowed(true);
 
-        $value = $caller->getPrivateProperty();
+        $value = $this->_caller->getPrivateProperty();
 
         $this->assertEquals(
             self::PROPERTYVALUE_PRIVATE, $value
@@ -102,35 +102,24 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
-     * @expectedExceptionCode 1
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
+     */
+    public function testGetOfProtectedPropertyTriggersExceptionIfNotAllowed()
+    {
+        $this->_accessController->setAllowed(false);
+        $this->_caller->getProtectedProperty();
+    }
+
+    /**
+     * @covers Friends_Dispatcher
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
      */
     public function testGetOfPrivatePropertyTriggersExceptionIfNotAllowed()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
-        $caller->getPrivateProperty();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
-     * @expectedExceptionCode 1
-     */
-    public function testGetOfPrivatePropertyFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-        $caller->getPrivateProperty();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_GetPropertyNotAllowedException
-     * @expectedExceptionCode 2
-     */
-    public function testGetOfProtectedPropertyFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-        $caller->getProtectedProperty();
+        $this->_accessController->setAllowed(false);
+        $this->_caller->getPrivateProperty();
     }
 
     // -------------------------------------------------------------------------
@@ -144,31 +133,18 @@ class Friends_DispatcherTest
     public function testDispatchSetChecksTargetIsOfRightType()
     {
         $object = new ArrayObject();
-        $dispatcher = new Friends_Dispatcher('Friends_DispatcherTest_Callee');
 
-        $dispatcher->dispatchSet($object, 'property', 'value');
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_InvalidPropertyException
-     */
-    public function testDispatchSetChecksThatPropertyExists()
-    {
-        $object = new stdClass;
-        $dispatcher = new Friends_Dispatcher('stdClass');
-
-        $dispatcher->dispatchSet($object, 'property', 'value');
+        $this->_dispatcher->dispatchSet($object, 'property', 'value');
     }
 
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodSetProtectedCalleeProperty()
+    public function testSetProtectedProperty()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
+        $this->_accessController->setAllowed(true);
 
-        $caller->setProtectedProperty(__METHOD__);
+        $this->_caller->setProtectedProperty(__METHOD__);
         $settedValue = $this->_callee->getProtectedProperty();
 
         $this->assertEquals(__METHOD__, $settedValue);
@@ -177,52 +153,38 @@ class Friends_DispatcherTest
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodSetPrivateCalleeProperty()
+    public function testSetPrivateProperty()
     {
-        $dispatcher = $this->_buildDispatcher(false);
-        $callee = $this->_buildCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($callee);
+        $this->_accessController->setAllowed(true);
 
-        $caller->setPrivateProperty(__METHOD__);
-        $settedValue = $callee->getPrivateProperty();
+        $this->_caller->setPrivateProperty(__METHOD__);
+        $settedValue = $this->_callee->getPrivateProperty();
 
         $this->assertEquals(__METHOD__, $settedValue);
     }
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
-     * @expectedExceptionCode 1
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
+     */
+    public function testSetOfProtectedPropertyTriggersExceptionIfNotAllowed()
+    {
+        $this->_accessController->setAllowed(false);
+
+        $this->_caller->setProtectedProperty(__METHOD__);
+    }
+
+    /**
+     * @covers Friends_Dispatcher
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
      */
     public function testSetOfPrivatePropertyTriggersExceptionIfNotAllowed()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
+        $this->_accessController->setAllowed(false);
 
-        $caller->setPrivateProperty(__METHOD__);
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
-     * @expectedExceptionCode 1
-     */
-    public function testSetOfPrivatePropertyFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-
-        $caller->setPrivateProperty(__METHOD__);
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_SetPropertyNotAllowedException
-     * @expectedExceptionCode 2
-     */
-    public function testSetOfProtectedPropertyFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-
-        $caller->setProtectedProperty(__METHOD__);
+        $this->_caller->setPrivateProperty(__METHOD__);
     }
 
     // -------------------------------------------------------------------------
@@ -236,31 +198,31 @@ class Friends_DispatcherTest
     public function testDispatchChecksCallTargetIsOfRightType()
     {
         $object = new ArrayObject();
-        $dispatcher = new Friends_Dispatcher('Friends_DispatcherTest_Callee');
 
-        $dispatcher->dispatchCall($object, 'count', array());
+        $this->_dispatcher->dispatchCall($object, 'count', array());
     }
 
     /**
      * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_InvalidMethodException
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
      */
     public function testDispatchChecksThatMethodExists()
     {
         $object = new stdClass;
-        $dispatcher = new Friends_Dispatcher('stdClass');
+        $this->_accessController->setClass('stdClass');
 
-        $dispatcher->dispatchCall($object, 'method', array());
+        $this->_dispatcher->dispatchCall($object, 'method', array());
     }
 
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodCallsProtectedCalleeMethod()
+    public function testCallProtectedMethod()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
+        $this->_accessController->setAllowed(true);
 
-        $caller->triggerProtectedCall();
+        $this->_caller->triggerProtectedCall();
         $numOfCalls = $this->_callee->getNumOfProtectedCalls();
 
         $this->assertEquals(
@@ -272,14 +234,12 @@ class Friends_DispatcherTest
     /**
      * @covers Friends_Dispatcher
      */
-    public function testFriendCallerMethodCallsPrivateCalleeMethodIfAllowed()
+    public function testCallPrivateMethod()
     {
-        $dispatcher = $this->_buildDispatcher(false);
-        $callee = $this->_buildCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($callee);
+        $this->_accessController->setAllowed(true);
 
-        $caller->triggerPrivateCall();
-        $numOfCalls = $callee->getNumOfPrivateCalls();
+        $this->_caller->triggerPrivateCall();
+        $numOfCalls = $this->_callee->getNumOfPrivateCalls();
 
         $this->assertEquals(
             1, $numOfCalls,
@@ -289,95 +249,25 @@ class Friends_DispatcherTest
 
     /**
      * @covers Friends_Dispatcher
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
      */
-    public function testFriendCallerClassCallsProtectedCalleeMethod()
+    public function testCallToProtectedTriggersExceptionIfNotAllowed()
     {
-        $caller = new Friends_DispatcherTest_ClassFriendCaller($this->_callee);
+        $this->_accessController->setAllowed(false);
 
-        $caller->triggerProtectedCall();
-        $numOfCalls = $this->_callee->getNumOfProtectedCalls();
-
-        $this->assertEquals(
-            1, $numOfCalls,
-            'callee received 1 call'
-        );
+        $this->_caller->triggerProtectedCall();
     }
 
     /**
      * @covers Friends_Dispatcher
-     */
-    public function testFriendCallerClassCallsPrivateCalleeMethodIfAllowed()
-    {
-        $dispatcher = $this->_buildDispatcher(false);
-        $callee = $this->_buildCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_ClassFriendCaller($callee);
-
-        $caller->triggerPrivateCall();
-        $numOfCalls = $callee->getNumOfPrivateCalls();
-
-        $this->assertEquals(
-            1, $numOfCalls,
-            'callee received 1 call'
-        );
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
-     * @expectedExceptionCode 1
-     */
-    public function testCallToPrivateFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-
-        $caller->triggerPrivateCall();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
-     * @expectedExceptionCode 2
-     */
-    public function testCallToProtectedFromStrangerTriggersException()
-    {
-        $caller = new Friends_DispatcherTest_StrangerCaller($this->_callee);
-
-        $caller->triggerProtectedCall();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     * @expectedException Friends_Dispatcher_CallMethodNotAllowedException
-     * @expectedExceptionCode 1
+     * @expectedException RuntimeException
+     * @expectedExceptionCode 123
      */
     public function testCallToPrivateTriggersExceptionIfNotAllowed()
     {
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($this->_callee);
+        $this->_accessController->setAllowed(false);
 
-        $caller->triggerPrivateCall();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     */
-    public function testFrindshipInheritsOnClassBase()
-    {
-        $dispatcher = new Friends_Dispatcher('Friends_DispatcherTest_ExtendedCallee');
-        $callee = new Friends_DispatcherTest_ExtendedCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_ClassFriendCaller($callee);
-
-        $caller->triggerProtectedCall();
-    }
-
-    /**
-     * @covers Friends_Dispatcher
-     */
-    public function testFrindshipInheritsOnMethodBase()
-    {
-        $dispatcher = new Friends_Dispatcher('Friends_DispatcherTest_ExtendedCallee');
-        $callee = new Friends_DispatcherTest_ExtendedCallee($dispatcher);
-        $caller = new Friends_DispatcherTest_MethodFriendCaller($callee);
-
-        $caller->triggerProtectedCall();
+        $this->_caller->triggerPrivateCall();
     }
 }

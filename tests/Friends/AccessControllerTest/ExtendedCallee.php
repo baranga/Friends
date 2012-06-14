@@ -1,7 +1,7 @@
 <?php
 
-class Friends_DispatcherTest_ExtendedCallee
-    extends Friends_DispatcherTest_Callee
+class Friends_AccessControllerTest_ExtendedCallee
+    extends Friends_AccessControllerTest_Callee
 {
     public function receivePublicCall()
     {

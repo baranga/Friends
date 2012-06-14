@@ -1,8 +1,5 @@
 <?php
 
-/**
- * @friend Friends_DispatcherTest_ClassFriendCaller
- */
 class Friends_DispatcherTest_Callee
 {
     protected $_numOfPublicCalls    = 0;
@@ -12,16 +9,8 @@ class Friends_DispatcherTest_Callee
 
     public $publicProperty;
 
-    /**
-     * @friend Friends_DispatcherTest_MethodFriendCaller::getProtectedProperty
-     * @friend Friends_DispatcherTest_MethodFriendCaller::setProtectedProperty
-     */
     protected $_protectedProperty;
 
-    /**
-     * @friend Friends_DispatcherTest_MethodFriendCaller::getPrivateProperty
-     * @friend Friends_DispatcherTest_MethodFriendCaller::setPrivateProperty
-     */
     private $_privateProperty;
 
     public function __construct(
@@ -58,17 +47,11 @@ class Friends_DispatcherTest_Callee
         $this->_numOfPublicCalls += 1;
     }
 
-    /**
-     * @friend Friends_DispatcherTest_MethodFriendCaller::triggerProtectedCall
-     */
     protected function _receiveProtectedCall()
     {
         $this->_numOfProtectedCalls += 1;
     }
 
-    /**
-     * @friend Friends_DispatcherTest_MethodFriendCaller::triggerPrivateCall
-     */
     private function _receivePrivateCall()
     {
         $this->_numOfPrivateCalls += 1;

@@ -1,7 +1,7 @@
 <?php
 
-class Friends_DispatcherTest_StrangerCaller
-    extends Friends_DispatcherTest_AbstractCaller
+class Friends_AccessControllerTest_ClassFriendCaller
+    extends Friends_AccessControllerTest_AbstractCaller
 {
     public function triggerPublicCall()
     {
