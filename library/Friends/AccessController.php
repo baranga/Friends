@@ -83,7 +83,7 @@ class Friends_AccessController
             }
         }
 
-        return $this->_isPropertyFriend($property, $caller);
+        return $this->_isPropertyFriend($property, $getter);
     }
 
     /** assert that get of property is allowed for getter (fluid)
@@ -95,8 +95,8 @@ class Friends_AccessController
      */
     public function assertGetIsAllowed($property, Friends_Friend $getter)
     {
-        if (!$this->isGetAllowed($property, $caller)) {
-            throw new Friends_AccessController_SetPropertyNotAllowedException(
+        if (!$this->isGetAllowed($property, $getter)) {
+            throw new Friends_AccessController_GetPropertyNotAllowedException(
                 $this->_class, $property
             );
         }

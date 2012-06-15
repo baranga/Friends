@@ -3,7 +3,16 @@
 class Friends_AccessControllerTest
     extends PHPUnit_Framework_TestCase
 {
+    const CLASS_CALLEE = 'Friends_AccessControllerTest_Callee';
+
+    /**
+     * @var Friends_AccessController
+     */
     private $_controller;
+
+    /**
+     * @var Friends_AccessControllerTest_Callee
+     */
     private $_callee;
 
     public function setUp()
@@ -15,7 +24,7 @@ class Friends_AccessControllerTest
     private function _buildController($privateLocked = true)
     {
         return new Friends_AccessController(
-            'Friends_DispatcherTest_Callee', $privateLocked
+            self::CLASS_CALLEE, $privateLocked
         );
     }
 
@@ -32,14 +41,14 @@ class Friends_AccessControllerTest
     {
         $class = $this->_controller->getClass();
         $this->assertEquals(
-            'Friends_DispatcherTest_Callee',
+            self::CLASS_CALLEE,
             $class
         );
     }
 
     public function testHasClass()
     {
-        $status = $this->_controller->hasClass('Friends_DispatcherTest_Callee');
+        $status = $this->_controller->hasClass(self::CLASS_CALLEE);
         $this->assertTrue($status);
     }
 
@@ -54,12 +63,28 @@ class Friends_AccessControllerTest
 
     public function testIsGetAllowedIdentifiesFriend()
     {
-        $this->markTestIncomplete();
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'getProtectedProperty'
+        );
+
+        $allowed = $this->_controller->isGetAllowed($property, $getter);
+
+        $this->assertTrue($allowed);
     }
 
     public function testIsGetAllowedIdentifiesStranger()
     {
-        $this->markTestIncomplete();
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerFriendCaller',
+            'getProtectedProperty'
+        );
+
+        $allowed = $this->_controller->isGetAllowed($property, $getter);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsGetAllowedDoesntAllowPrivateIfConfigured()
@@ -136,7 +161,45 @@ class Friends_AccessControllerTest
     }
 
     // -------------------------------------------------------------------------
-    // assert utility
+    // assert utilities
     // -------------------------------------------------------------------------
 
+    public function testAssertGetIsAllowedPassesOnFriend()
+    {
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'getProtectedProperty'
+        );
+        $this->_controller->assertGetIsAllowed($property, $getter);
+    }
+
+    /**
+     * @expectedException Friends_AccessController_GetPropertyNotAllowedException
+     */
+    public function testAssertGetIsAllowedThrowsOnStranger()
+    {
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerCaller',
+            'getProtectedProperty'
+        );
+        $this->_controller->assertGetIsAllowed($property, $getter);
+    }
+
+    /**
+     * @expectedException Friends_AccessController_SetPropertyNotAllowedException
+     */
+    public function testAssertSetIsAllowed()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @expectedException Friends_AccessController_CallMethodNotAllowedException
+     */
+    public function testAssertCallIsAllowed()
+    {
+        $this->markTestIncomplete();
+    }
 }
