@@ -215,9 +215,9 @@ class Friends_AccessControllerTest
         $method = '_protectedMethod';
         $caller = new Friends_Friend_Method(
             'Friends_AccessControllerTest_MethodFriendCaller',
-            'callProtectedMethod'
+            'triggerProtectedCall'
         );
-        $this->_controller->assertSetIsAllowed($method, $caller);
+        $this->_controller->assertCallIsAllowed($method, $caller);
     }
 
     /**
@@ -228,8 +228,8 @@ class Friends_AccessControllerTest
         $method = '_protectedMethod';
         $caller = new Friends_Friend_Method(
             'Friends_AccessControllerTest_StrangerCaller',
-            'callProtectedMethod'
+            'triggerProtectedCall'
         );
-        $this->_controller->assertSetIsAllowed($method, $caller);
+        $this->_controller->assertCallIsAllowed($method, $caller);
     }
 }
