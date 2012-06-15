@@ -6,7 +6,8 @@ for PHP. This is done with the built-in
 
 ## Requirements
 * version: >= 5.2
-* for auto dispatching: >= 5.3.2 compiled with reflection
+* for auto dispatching >= 5.3.2
+* compiled with reflection
 
 ## Usage
 
