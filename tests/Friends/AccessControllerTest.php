@@ -210,11 +210,26 @@ class Friends_AccessControllerTest
         $this->_controller->assertSetIsAllowed($property, $getter);
     }
 
+    public function testAssertCallIsAllowedPassesOnFriend()
+    {
+        $method = '_protectedMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'callProtectedMethod'
+        );
+        $this->_controller->assertSetIsAllowed($method, $caller);
+    }
+
     /**
      * @expectedException Friends_AccessController_CallMethodNotAllowedException
      */
-    public function testAssertCallIsAllowed()
+    public function testAssertCallIsAllowedThrowsOnStranger()
     {
-        $this->markTestIncomplete();
+        $method = '_protectedMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerCaller',
+            'callProtectedMethod'
+        );
+        $this->_controller->assertSetIsAllowed($method, $caller);
     }
 }
