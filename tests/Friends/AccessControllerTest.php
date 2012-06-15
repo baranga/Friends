@@ -187,12 +187,27 @@ class Friends_AccessControllerTest
         $this->_controller->assertGetIsAllowed($property, $getter);
     }
 
+    public function testAssertSetIsAllowedPassesOnFriend()
+    {
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'setProtectedProperty'
+        );
+        $this->_controller->assertSetIsAllowed($property, $getter);
+    }
+
     /**
      * @expectedException Friends_AccessController_SetPropertyNotAllowedException
      */
-    public function testAssertSetIsAllowed()
+    public function testAssertSetIsAllowedThrowsOnStranger()
     {
-        $this->markTestIncomplete();
+        $property = '_protectedProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerCaller',
+            'setProtectedProperty'
+        );
+        $this->_controller->assertSetIsAllowed($property, $getter);
     }
 
     /**
