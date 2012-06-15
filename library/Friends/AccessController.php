@@ -120,9 +120,9 @@ class Friends_AccessController
      *  @throws Friends_AccessController_SetPropertyNotAllowedException if set is not
      *  allowed
      */
-    public function assertSetIsAllowed($property, Friends_Friend $getter)
+    public function assertSetIsAllowed($property, Friends_Friend $setter)
     {
-        if (!$this->isSetAllowed($property, $caller)) {
+        if (!$this->isSetAllowed($property, $setter)) {
             throw new Friends_AccessController_SetPropertyNotAllowedException(
                 $this->_class, $property
             );
