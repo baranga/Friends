@@ -76,7 +76,7 @@ class Friends_Dispatcher
         }
     }
 
-    /** @brief caller of dispatch*
+    /** @brief caller of dispatch
      *  @param $level
      *  @return Friends_Friend
      */
