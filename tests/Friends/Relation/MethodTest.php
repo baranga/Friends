@@ -37,7 +37,7 @@ class Friends_Relation_MethodTest
 
     /**
      * @covers Friends_Relation_Method::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_UnknownClassException
      */
     public function testConstructThrowsExceptionOnInvalidClass()
     {
@@ -48,7 +48,7 @@ class Friends_Relation_MethodTest
 
     /**
      * @covers Friends_Relation_Method::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_UnknownMethodException
      */
     public function testConstructThrowsExceptionOnInvalidMethod()
     {

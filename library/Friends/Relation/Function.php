@@ -9,9 +9,7 @@ class Friends_Relation_Function
     {
         $function = (string) $function;
         if (!function_exists($function)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown function: "%s"', $function
-            ));
+            throw new Friends_Relation_UnknownFunctionException($function);
         }
 
         $reflector = new ReflectionFunction($function);

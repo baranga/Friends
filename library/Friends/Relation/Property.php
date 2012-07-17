@@ -11,14 +11,10 @@ class Friends_Relation_Property
         $class = (string) $class;
         $property = (string) $property;
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown class: "%s"', $class
-            ));
+            throw new Friends_Relation_UnknownClassException($class);
         }
         if (!property_exists($class, $property)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown property: "%s"', $property
-            ));
+            throw new Friends_Relation_UnknownPropertyException($class, $property);
         }
 
         $reflector = new ReflectionProperty($class, $property);

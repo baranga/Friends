@@ -5,7 +5,7 @@ class Friends_Relation_AbstractRelationTest
 {
     /**
      * @dataProvider provideInvalidFriends
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_InvalidEntryInFriendListException
      */
     public function testConstructThrowsExceptionOnInvalidFriends($invalidFriends)
     {

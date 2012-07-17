@@ -26,7 +26,7 @@ class Friends_Relation_FunctionTest
 
     /**
      * @covers Friends_Relation_Function::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_UnknownFunctionException
      */
     public function testConstructThrowsExceptionOnInvalidFunction()
     {

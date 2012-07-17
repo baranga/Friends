@@ -37,7 +37,7 @@ class Friends_Relation_PropertyTest
 
     /**
      * @covers Friends_Relation_Property::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_UnknownClassException
      */
     public function testConstructThrowsExceptionOnInvalidClass()
     {
@@ -48,7 +48,7 @@ class Friends_Relation_PropertyTest
 
     /**
      * @covers Friends_Relation_Property::__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException Friends_Relation_UnknownPropertyException
      */
     public function testConstructThrowsExceptionOnInvalidProperty()
     {

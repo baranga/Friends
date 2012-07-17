@@ -11,14 +11,10 @@ class Friends_Relation_Method
         $class = (string) $class;
         $method = (string) $method;
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown class: "%s"', $class
-            ));
+            throw new Friends_Relation_UnknownClassException($class);
         }
         if (!method_exists($class, $method)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown method: "%s::%s"', $class, $method
-            ));
+            throw new Friends_Relation_UnknownMethodException($class, $method);
         }
 
         $friends   = array();

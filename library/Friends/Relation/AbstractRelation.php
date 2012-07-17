@@ -7,9 +7,11 @@ abstract class Friends_Relation_AbstractRelation
 
     protected function __construct(array $friends)
     {
-        foreach ($friends as $friend) {
+        foreach ($friends as $key => $friend) {
             if (!$friend instanceof Friends_FriendInterface) {
-                throw new InvalidArgumentException('invalid friend');
+                throw new Friends_Relation_InvalidEntryInFriendListException(
+                    $key, $friend
+                );
             }
         }
         $this->_friends = $friends;

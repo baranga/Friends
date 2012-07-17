@@ -12,9 +12,7 @@ class Friends_Relation_Class
         }
         $class = (string) $class;
         if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf(
-                'unknown class: "%s"', $class
-            ));
+            throw new Friends_Relation_UnknownClassException($class);
         }
 
         $friends   = array();
