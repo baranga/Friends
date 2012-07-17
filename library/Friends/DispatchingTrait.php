@@ -7,6 +7,29 @@ trait Friends_DispatchingTrait
      */
     private static $_dispatchers = array();
 
+    /** @brief magic get handler
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return self::_getDispatcher($this)
+            ->dispatchGet($this, $property);
+    }
+
+    /** @brief magic set handler
+     *
+     * @param string $property
+     * @param mixed $value
+     * @return null
+     */
+    public function __set($property, $value)
+    {
+        self::_getDispatcher($this)
+            ->dispatchSet($this, $property, $value);
+    }
+
     /** @brief magic call handler
      *
      *  @param string $method
