@@ -56,9 +56,18 @@ class Friends_AccessControllerTest
     // get access
     // -------------------------------------------------------------------------
 
+    /**
+     * @expectedException Friends_AccessController_InvalidPropertyException
+     */
     public function testIsGetAllowedChecksPropertyExists()
     {
-        $this->markTestIncomplete();
+        $property = '_notExistingProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'getProtectedProperty'
+        );
+
+        $this->_controller->isGetAllowed($property, $getter);
     }
 
     public function testIsGetAllowedIdentifiesFriend()
@@ -89,12 +98,29 @@ class Friends_AccessControllerTest
 
     public function testIsGetAllowedDoesntAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $property = '_privateProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'getPrivateProperty'
+        );
+
+        $allowed = $this->_controller->isGetAllowed($property, $getter);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsGetAllowedDoesAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $controller = $this->_buildController(false);
+        $property = '_privateProperty';
+        $getter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'getPrivateProperty'
+        );
+
+        $allowed = $controller->isGetAllowed($property, $getter);
+
+        $this->assertTrue($allowed);
     }
 
     // -------------------------------------------------------------------------
