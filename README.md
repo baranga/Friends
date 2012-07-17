@@ -77,5 +77,5 @@ class MyClass
 ## Todo
 * ~~replace all SPL exceptions with lib exception~~
 * improve exceptions (messages, common interface)
-* increase code coverage of unit tests
+* ~~increase code coverage of unit tests~~
 * implement the trait
