@@ -127,29 +127,71 @@ class Friends_AccessControllerTest
     // set access
     // -------------------------------------------------------------------------
 
+    /**
+     * @expectedException Friends_AccessController_InvalidPropertyException
+     */
     public function testIsSetAllowedChecksPropertyExists()
     {
-        $this->markTestIncomplete();
+        $property = '_notExistingProperty';
+        $setter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'setProtectedProperty'
+        );
+
+        $this->_controller->isSetAllowed($property, $setter);
     }
 
     public function testIsSetAllowedIdentifiesFriend()
     {
-        $this->markTestIncomplete();
+        $property = '_protectedProperty';
+        $setter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'setProtectedProperty'
+        );
+
+        $allowed = $this->_controller->isSetAllowed($property, $setter);
+
+        $this->assertTrue($allowed);
     }
 
     public function testIsSetAllowedIdentifiesStranger()
     {
-        $this->markTestIncomplete();
+        $property = '_protectedProperty';
+        $setter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerFriendCaller',
+            'setProtectedProperty'
+        );
+
+        $allowed = $this->_controller->isSetAllowed($property, $setter);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsSetAllowedDoesntAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $property = '_privateProperty';
+        $setter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerFriendCaller',
+            'setPrivateProperty'
+        );
+
+        $allowed = $this->_controller->isSetAllowed($property, $setter);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsSetAllowedDoesAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $controller = $this->_buildController(false);
+        $property = '_privateProperty';
+        $setter = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'setPrivateProperty'
+        );
+
+        $allowed = $controller->isSetAllowed($property, $setter);
+
+        $this->assertTrue($allowed);
     }
 
     // -------------------------------------------------------------------------
