@@ -79,3 +79,4 @@ class MyClass
 * improve exceptions (messages, common interface)
 * ~~increase code coverage of unit tests~~
 * implement the trait
+* add some examples
