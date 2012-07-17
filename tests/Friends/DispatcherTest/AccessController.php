@@ -27,32 +27,32 @@ class Friends_DispatcherTest_AccessController
         $this->_allowed = (bool) $allowed;
     }
 
-    public function isGetAllowed($property, Friends_Friend $getter)
+    public function isGetAllowed($property, Friends_FriendInterface $getter)
     {
         return $this->_allowed;
     }
 
-    public function assertGetIsAllowed($property, Friends_Friend $getter)
+    public function assertGetIsAllowed($property, Friends_FriendInterface $getter)
     {
         $this->_assertAllowed();
     }
 
-    public function isSetAllowed($property, Friends_Friend $setter)
+    public function isSetAllowed($property, Friends_FriendInterface $setter)
     {
         return $this->_allowed;
     }
 
-    public function assertSetIsAllowed($property, Friends_Friend $getter)
+    public function assertSetIsAllowed($property, Friends_FriendInterface $getter)
     {
         $this->_assertAllowed();
     }
 
-    public function isCallAllowed($method, Friends_Friend $caller)
+    public function isCallAllowed($method, Friends_FriendInterface $caller)
     {
         return $this->_allowed;
     }
 
-    public function assertCallIsAllowed($property, Friends_Friend $getter)
+    public function assertCallIsAllowed($property, Friends_FriendInterface $getter)
     {
         $this->_assertAllowed();
     }

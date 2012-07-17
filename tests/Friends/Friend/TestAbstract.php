@@ -4,7 +4,7 @@ abstract class Friends_Friend_TestAbstract
     extends PHPUnit_Framework_TestCase
 {
     protected function _assertUnidirectionalEquality(
-        Friends_Friend $a, Friends_Friend $b
+        Friends_FriendInterface $a, Friends_FriendInterface $b
     )
     {
         $this->assertTrue(
@@ -14,7 +14,7 @@ abstract class Friends_Friend_TestAbstract
     }
 
     protected function _assertBidirectionalEquality(
-        Friends_Friend $a, Friends_Friend $b
+        Friends_FriendInterface $a, Friends_FriendInterface $b
     )
     {
         $this->assertTrue(
@@ -28,7 +28,7 @@ abstract class Friends_Friend_TestAbstract
     }
 
     protected function _assertUnidirectionalUnequality(
-        Friends_Friend $a, Friends_Friend $b
+        Friends_FriendInterface $a, Friends_FriendInterface $b
     )
     {
         $this->assertFalse(
@@ -38,7 +38,7 @@ abstract class Friends_Friend_TestAbstract
     }
 
     protected function _assertBidirectionalUnequality(
-        Friends_Friend $a, Friends_Friend $b
+        Friends_FriendInterface $a, Friends_FriendInterface $b
     )
     {
         $this->assertFalse(

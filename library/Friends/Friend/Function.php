@@ -1,7 +1,7 @@
 <?php
 
 class Friends_Friend_Function
-    implements Friends_Friend
+    implements Friends_FriendInterface
 {
     private $_name;
 
@@ -10,7 +10,7 @@ class Friends_Friend_Function
         $this->_name = (string) $name;
     }
 
-    public function equal(Friends_Friend $friend)
+    public function equal(Friends_FriendInterface $friend)
     {
         if ($friend instanceof Friends_Friend_Function) {
             return $friend->hasName($this->_name);

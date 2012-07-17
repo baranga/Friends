@@ -11,7 +11,7 @@ class Friends_Friend_Method
         $this->_method = (string) $method;
     }
 
-    public function equal(Friends_Friend $friend)
+    public function equal(Friends_FriendInterface $friend)
     {
         if ($friend instanceof Friends_Friend_Method) {
             return

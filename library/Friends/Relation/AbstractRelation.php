@@ -1,14 +1,14 @@
 <?php
 
 abstract class Friends_Relation_AbstractRelation
-    implements Friends_Relation
+    implements Friends_RelationInterface
 {
     private $_friends = array();
 
     protected function __construct(array $friends)
     {
         foreach ($friends as $friend) {
-            if (!$friend instanceof Friends_Friend) {
+            if (!$friend instanceof Friends_FriendInterface) {
                 throw new InvalidArgumentException('invalid friend');
             }
         }
@@ -20,7 +20,7 @@ abstract class Friends_Relation_AbstractRelation
         return $this->_friends;
     }
 
-    public function isFriend(Friends_Friend $other)
+    public function isFriend(Friends_FriendInterface $other)
     {
         foreach ($this->_friends as $friend) {
             if ($friend->equal($other)) {

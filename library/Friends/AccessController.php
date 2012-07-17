@@ -67,10 +67,10 @@ class Friends_AccessController
 
     /** get of property allowed for getter
      *  @param string $property name of property
-     *  @param Friends_Friend $getter getting object
+     *  @param Friends_FriendInterface $getter getting object
      *  @return boolean
      */
-    public function isGetAllowed($property, Friends_Friend $getter)
+    public function isGetAllowed($property, Friends_FriendInterface $getter)
     {
         $property = (string) $property;
         $this->_assertPropertyExists($property);
@@ -88,12 +88,12 @@ class Friends_AccessController
 
     /** assert that get of property is allowed for getter (fluid)
      *  @param string $property name of property
-     *  @param Friends_Friend $setter getting object
+     *  @param Friends_FriendInterface $setter getting object
      *  @return Friends_AccessController
      *  @throws Friends_AccessController_GetPropertyNotAllowedException if get is not
      *  allowed
      */
-    public function assertGetIsAllowed($property, Friends_Friend $getter)
+    public function assertGetIsAllowed($property, Friends_FriendInterface $getter)
     {
         if (!$this->isGetAllowed($property, $getter)) {
             throw new Friends_AccessController_GetPropertyNotAllowedException(
@@ -105,22 +105,22 @@ class Friends_AccessController
 
     /** set of property allowed for getter
      *  @param string $property name of property
-     *  @param Friends_Friend $getter setting object
+     *  @param Friends_FriendInterface $getter setting object
      *  @return boolean
      */
-    public function isSetAllowed($property, Friends_Friend $setter)
+    public function isSetAllowed($property, Friends_FriendInterface $setter)
     {
         return $this->isGetAllowed($property, $setter);
     }
 
     /** assert that set of property is allowed for setter (fluid)
      *  @param string $property name of property
-     *  @param Friends_Friend $setter setting object
+     *  @param Friends_FriendInterface $setter setting object
      *  @return Friends_AccessController
      *  @throws Friends_AccessController_SetPropertyNotAllowedException if set is not
      *  allowed
      */
-    public function assertSetIsAllowed($property, Friends_Friend $setter)
+    public function assertSetIsAllowed($property, Friends_FriendInterface $setter)
     {
         if (!$this->isSetAllowed($property, $setter)) {
             throw new Friends_AccessController_SetPropertyNotAllowedException(
@@ -132,10 +132,10 @@ class Friends_AccessController
 
     /** call of method allowed for caller
      *  @param string $method name of method
-     *  @param Friends_Friend $caller calling object
+     *  @param Friends_FriendInterface $caller calling object
      *  @return boolean
      */
-    public function isCallAllowed($method, Friends_Friend $caller)
+    public function isCallAllowed($method, Friends_FriendInterface $caller)
     {
         $method = (string) $method;
         $this->_assertMethodExists($method);
@@ -153,12 +153,12 @@ class Friends_AccessController
 
     /** assert that call of method is allowed for caller (fluid)
      *  @param string $method name of method
-     *  @param Friends_Friend $caller calling object
+     *  @param Friends_FriendInterface $caller calling object
      *  @return Friends_AccessController
      *  @throws Friends_AccessController_SetPropertyNotAllowedException if call is not
      *  allowed
      */
-    public function assertCallIsAllowed($method, Friends_Friend $caller)
+    public function assertCallIsAllowed($method, Friends_FriendInterface $caller)
     {
         if (!$this->isCallAllowed($method, $caller)) {
             throw new Friends_AccessController_CallMethodNotAllowedException(
@@ -258,10 +258,10 @@ class Friends_AccessController
 
     /** @brief check if caller is a friend of property
      *  @param string $property
-     *  @param Friends_Friend $caller
+     *  @param Friends_FriendInterface $caller
      *  @return boolean
      */
-    private function _isPropertyFriend($property, Friends_Friend $caller)
+    private function _isPropertyFriend($property, Friends_FriendInterface $caller)
     {
         return
             $this->_getClassRelation()->isFriend($caller) ||
@@ -270,10 +270,10 @@ class Friends_AccessController
 
     /** @brief check if caller is a friend of method
      *  @param string $method
-     *  @param Friends_Friend $caller
+     *  @param Friends_FriendInterface $caller
      *  @return boolean
      */
-    private function _isMethodFriend($method, Friends_Friend $caller)
+    private function _isMethodFriend($method, Friends_FriendInterface $caller)
     {
         return
             $this->_getClassRelation()->isFriend($caller) ||
