@@ -95,7 +95,7 @@ class Friends_BacktraceTest
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException Friends_Backtrace_ReadonlyException
      */
     public function testOffsetSetIsNotAllowed()
     {
@@ -104,7 +104,7 @@ class Friends_BacktraceTest
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException Friends_Backtrace_ReadonlyException
      */
     public function testOffsetUnsetIsNotAllowed()
     {
