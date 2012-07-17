@@ -198,34 +198,71 @@ class Friends_AccessControllerTest
     // call access
     // -------------------------------------------------------------------------
 
+    /**
+     * @expectedException Friends_AccessController_InvalidMethodException
+     */
     public function testIsCallAllowedChecksMetohdExists()
     {
-        $this->markTestIncomplete();
-    }
+        $method = 'notExistingMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'callNotExistingMethod'
+        );
 
-    public function testIsCallAllowedChecksPropertyExists()
-    {
-        $this->markTestIncomplete();
+        $this->_controller->isCallAllowed($method, $caller);
     }
 
     public function testIsCallAllowedIdentifiesFriend()
     {
-        $this->markTestIncomplete();
+        $method = '_protectedMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'triggerProtectedCall'
+        );
+
+        $allowed = $this->_controller->isCallAllowed($method, $caller);
+
+        $this->assertTrue($allowed);
     }
 
     public function testIsCallAllowedIdentifiesStranger()
     {
-        $this->markTestIncomplete();
+        $method = '_protectedMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerFriendCaller',
+            'triggerProtectedCall'
+        );
+
+        $allowed = $this->_controller->isCallAllowed($method, $caller);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsCallAllowedDoesntAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $method = '_privateMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_StrangerFriendCaller',
+            'triggerPrivateCall'
+        );
+
+        $allowed = $this->_controller->isCallAllowed($method, $caller);
+
+        $this->assertFalse($allowed);
     }
 
     public function testIsCallAllowedDoesAllowPrivateIfConfigured()
     {
-        $this->markTestIncomplete();
+        $controller = $this->_buildController(false);
+        $method = '_privateMethod';
+        $caller = new Friends_Friend_Method(
+            'Friends_AccessControllerTest_MethodFriendCaller',
+            'triggerPrivateCall'
+        );
+
+        $allowed = $controller->isCallAllowed($method, $caller);
+
+        $this->assertTrue($allowed);
     }
 
     // -------------------------------------------------------------------------
