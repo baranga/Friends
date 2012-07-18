@@ -13,12 +13,14 @@ class Friends_Relation_Method
         if (!class_exists($class)) {
             throw new Friends_Relation_UnknownClassException($class);
         }
-        if (!method_exists($class, $method)) {
+        try {
+            $reflector = new ReflectionMethod($class, $method);
+        } catch (ReflectionException $unknownMethodException) {
+            // replace with lib exception
             throw new Friends_Relation_UnknownMethodException($class, $method);
         }
 
         $friends   = array();
-        $reflector = new ReflectionMethod($class, $method);
         $parser    = new Friends_Relation_DocCommentParser();
 
         do {

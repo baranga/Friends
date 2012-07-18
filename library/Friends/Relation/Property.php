@@ -13,11 +13,12 @@ class Friends_Relation_Property
         if (!class_exists($class)) {
             throw new Friends_Relation_UnknownClassException($class);
         }
-        if (!property_exists($class, $property)) {
+        try {
+            $reflector = new ReflectionProperty($class, $property);
+        } catch (ReflectionException $unknownPropertyException) {
+            // replace with lib exception
             throw new Friends_Relation_UnknownPropertyException($class, $property);
         }
-
-        $reflector = new ReflectionProperty($class, $property);
         $parser    = new Friends_Relation_DocCommentParser();
         $friends   = $parser->parse($reflector->getDocComment());
 
