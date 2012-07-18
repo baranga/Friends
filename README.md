@@ -20,8 +20,19 @@ Implement magic hooks with access controll and dispatch magic.
 ```php
 <?php
 
+/**
+ * @friend BuddyClass
+ */
 class MyClass
 {
+    /**
+     * @friend OtherClass::buddyMethod
+     */
+    protected function _doSomething()
+    {
+        // ...
+    }
+
     public function __call($method, $arguments)
     {
         $trace = new Friends_Backtrace();
@@ -43,18 +54,38 @@ your class.
 ```php
 <?php
 
+/**
+ * @friend BuddyClass
+ */
 class MyClass
     extends Friends_Base
 {
-    // thats all :D
+    /**
+     * @friend OtherClass::buddyMethod
+     */
+    protected function _doSomething()
+    {
+        // ...
+    }
 }
 ```
 
 ```php
 <?php
 
+/**
+ * @friend BuddyClass
+ */
 class MyClass
 {
+    /**
+     * @friend OtherClass::buddyMethod
+     */
+    protected function _doSomething()
+    {
+        // ...
+    }
+
     public function __call($method, $arguments)
     {
         $controller = new Friends_AccessController($this);
@@ -70,10 +101,19 @@ As in 5.3 or use the trait `Friends_DispatchingTrait`.
 ```php
 <?php
 
+/**
+ * @friend BuddyClass
+ */
 class MyClass
     use Friends_DispatchingTrait
 {
-    // ...
+    /**
+     * @friend OtherClass::buddyMethod
+     */
+    protected function _doSomething()
+    {
+        // ...
+    }
 }
 ```
 
