@@ -4,6 +4,9 @@ Friends is a libary emulating the C++
 for PHP. This is done with the built-in
 [Reflection](http://php.net/manual/en/book.reflection.php) feature of PHP.
 
+[![Build Status](https://secure.travis-ci.org/baranga/Friends.png)](http://travis-ci.org/baranga/Friends)
+
+
 ## Requirements
 * version: >= 5.2
 * for auto dispatching >= 5.3.2
