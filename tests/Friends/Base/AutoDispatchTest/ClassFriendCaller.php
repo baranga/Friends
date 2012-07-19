@@ -1,7 +1,7 @@
 <?php
 
-class Friends_BaseTest_MethodFriendCaller
-    extends Friends_BaseTest_AbstractCaller
+class Friends_Base_AutoDispatchTest_ClassFriendCaller
+    extends Friends_Base_AutoDispatchTest_AbstractCaller
 {
     public function triggerPublicCall()
     {

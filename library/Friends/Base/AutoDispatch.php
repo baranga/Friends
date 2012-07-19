@@ -3,7 +3,7 @@
 /** @brief base for classes with friends
  *
  */
-abstract class Friends_Base
+abstract class Friends_Base_AutoDispatch
 {
     /** @brief registry of dispatchers
      *  @var array<Friends_Dispatcher>

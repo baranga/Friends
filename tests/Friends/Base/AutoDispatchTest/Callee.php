@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @friend Friends_BaseTest_ClassFriendCaller
+ * @friend Friends_Base_AutoDispatchTest_ClassFriendCaller
  */
-class Friends_BaseTest_Callee
-    extends Friends_Base
+class Friends_Base_AutoDispatchTest_Callee
+    extends Friends_Base_AutoDispatch
 {
     protected $_numOfPublicCalls    = 0;
     protected $_numOfProtectedCalls = 0;
@@ -16,7 +16,7 @@ class Friends_BaseTest_Callee
     }
 
     /**
-     * @friend Friends_BaseTest_MethodFriendCaller::triggerProtectedCall
+     * @friend Friends_Base_AutoDispatchTest_MethodFriendCaller::triggerProtectedCall
      */
     protected function _receiveProtectedCall()
     {
@@ -24,7 +24,7 @@ class Friends_BaseTest_Callee
     }
 
     /**
-     * @friend Friends_BaseTest_MethodFriendCaller::triggerPrivateCall
+     * @friend Friends_Base_AutoDispatchTest_MethodFriendCaller::triggerPrivateCall
      */
     private function _receivePrivateCall()
     {

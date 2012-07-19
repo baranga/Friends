@@ -1,6 +1,6 @@
 <?php
 
-class Friends_BaseTest
+class Friends_Base_AutoDispatchTest
     extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -13,9 +13,9 @@ class Friends_BaseTest
 
     public function testDispatch()
     {
-        $callee = new Friends_BaseTest_Callee();
-        $classCaller = new Friends_BaseTest_ClassFriendCaller($callee);
-        $methodCaller = new Friends_BaseTest_MethodFriendCaller($callee);
+        $callee = new Friends_Base_AutoDispatchTest_Callee();
+        $classCaller = new Friends_Base_AutoDispatchTest_ClassFriendCaller($callee);
+        $methodCaller = new Friends_Base_AutoDispatchTest_MethodFriendCaller($callee);
 
         $classCaller->triggerPublicCall();
         $methodCaller->triggerPublicCall();
