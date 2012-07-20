@@ -2,7 +2,17 @@
 
 function autoload($class) {
     $file = str_replace('_', '/', $class) . '.php';
-    @include_once $file;
+    $includePaths = explode(PATH_SEPARATOR, get_include_path());
+    foreach ($includePaths as $includePath) {
+        $fullPath =
+            rtrim($includePath, DIRECTORY_SEPARATOR) .
+            DIRECTORY_SEPARATOR .
+            ltrim($file, DIRECTORY_SEPARATOR);
+        if (is_file($fullPath)) {
+            include_once $fullPath;
+            break;
+        }
+    }
 }
 spl_autoload_register('autoload');
 
