@@ -2,6 +2,7 @@
 
 class Friends_Dispatcher_MissingLanguageFeatureException
     extends RuntimeException
+    implements Friends_Dispatcher_ExceptionInterface
 {
     const CODE_MISSING_SET_PROPERTY_ACCESSIBLE = 1;
     const CODE_MISSING_SET_METHOD_ACCESSIBLE = 2;

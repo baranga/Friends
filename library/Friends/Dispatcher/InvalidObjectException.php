@@ -2,6 +2,7 @@
 
 class Friends_Dispatcher_InvalidObjectException
     extends InvalidArgumentException
+    implements Friends_Dispatcher_ExceptionInterface
 {
     public function __construct($object, $class)
     {
