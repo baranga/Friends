@@ -120,8 +120,8 @@ class MyClass
 ## Todo
 * [x] replace all SPL exceptions with lib exception
 * [ ] improve exceptions
-** [ ] messages
-** [x] common interface
+    * [ ] messages
+    * [x] common interface
 * [x] increase code coverage of unit tests
 * [x] implement the trait
 * [ ] add some examples
