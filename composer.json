@@ -1,0 +1,19 @@
+{
+    "name": "baranga/Friends",
+    "description": "Friends is a libary emulating the C++ 'friend' language feature for PHP",
+    "type": "library",
+    "homepage": "https://github.com/baranga/Friends",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "baranga",
+            "homepage": "https://github.com/baranga",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Friends": "library/"
+        }
+    }
+}
