@@ -15,5 +15,8 @@
         "psr-0": {
             "Friends": "library/"
         }
+    },
+    "require": {
+        "php": "~5.2"
     }
 }
